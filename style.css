@@ -1,0 +1,243 @@
+body {
+    padding: 0;
+    margin: 0;
+    font-family: "Ubuntu Mono", monospace;
+}
+
+.mb0 {
+    margin-bottom: 0 !important;
+}
+
+.container {
+    width: 100%;
+    padding: 50px 0 150px;
+    background-color: #EFE9E1;
+}
+
+.container h1 {
+    font-size: 42px;
+    color: #F26454;
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.container .btn-gp {
+    max-width: 1000px;
+    margin: 0 auto 150px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.btn-gp .btn {
+    display: inline-block;
+    font-family: "Ubuntu Mono", monospace;
+	font-size: 20px;
+    font-weight: 700;
+	color: #9B8C7C; 
+	background: none;
+    border: 1px solid #9B8C7C;
+    border-radius: 50px;
+	cursor: pointer;
+	padding: 20px 60px;
+    /* main point */
+    overflow: hidden;
+	position: relative;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+.btn-gp .btn::after {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+/* background hover effect */
+.btn-bg-fill:hover {
+    color: #fff;
+    background-color: #EEA91E;
+    border: none;
+}
+
+/* fill background */
+.btn-fill-v,
+.btn-fill-h {
+    z-index: 1;
+}
+
+/* fill from top & bottom */
+.btn-fill-v::after {
+    width: 100%;
+    height: 0;
+    left: 0;
+    z-index: 0;
+    background-color: #EEA91E;
+}
+
+.btn-fill-v1::after {
+    top: 0;
+}
+
+.btn-fill-v2::after {
+    bottom: 0;
+}
+
+.btn-fill-v:hover{
+    color: #fff;
+}
+
+.btn-fill-v:hover::after {
+    height: 100%;
+}
+
+/* fill from left & right */
+.btn-fill-h::after {
+    width: 0;
+    height: 100%;
+    top: 0;
+    z-index: 0;
+    background-color: #EEA91E;
+}
+
+.btn-fill-h1::after {
+    left: 0;
+}
+
+.btn-fill-h2::after {
+    right: 0;
+}
+
+.btn-fill-h:hover{
+    color: #fff;
+}
+
+.btn-fill-h:hover::after {
+    width: 100%;
+}
+
+/* icon slide */
+.btn.btn-slide {
+    color: #fff;
+    background-color: #F26454;
+    border: none;
+}
+
+.btn-slide::before {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+	top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+.btn-slide1::before {
+    content: '';
+    background: url(./images/arrow-right.svg);
+    left: 70%;
+}
+
+.btn-slide1:hover::before {
+	left: 80%;
+	opacity: 1;
+}
+
+.btn-slide2::before {
+    content: '';
+    background: url(./images/arrow-left.svg);
+	right: 70%;
+}
+
+.btn-slide2:hover::before {
+	right: 80%;
+	opacity: 1;
+}
+
+/* background slide */
+.btn.btn-bg-slide {
+    padding: 12px 18px;
+    overflow: visible;
+    color: #fff;
+    background-color: none;
+    border: none;
+    z-index: 1;
+}
+
+.btn.btn-bg-slide::after {
+    content: '';
+    width: 45px;
+    height: 45px;
+    top: 0;
+    left: 0;
+    border-radius: 50px;
+    background-color: #F26454;
+}
+
+.btn-bg-slide:hover::after {
+    width: 100%;
+    background-color: #F26454;
+}
+
+/* icon button */
+/* .btn.btn-icon1 {
+    border-radius: 50%;
+    padding: 35px 35px;
+    background-color: #000;
+    border: none;
+}
+
+.btn-icon1 img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+}
+
+.btn.btn-icon1:hover {
+    background-color: #A79BF9;
+} */
+
+/*  */
+/* .fill-button {
+  margin-top: 100px;
+  padding: 15px 30px;
+  font-size: 18px;
+  border: 2px solid #3498db;
+  color: #3498db;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s ease-in-out;
+}
+
+.fill-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #3498db;
+  z-index: -1; 
+  transform: translateX(-100%);
+  transition: transform 0.4s ease-in-out;
+}
+
+.fill-button:hover {
+  color: #ffffff;
+}
+
+.fill-button:hover::before {
+  transform: translateX(0);
+} */
