@@ -87,7 +87,7 @@ body {
     bottom: 0;
 }
 
-.btn-fill-v:hover{
+.btn-fill-v:hover {
     color: #fff;
 }
 
@@ -183,7 +183,26 @@ body {
 
 .btn-bg-slide:hover::after {
     width: 100%;
+}
+
+/* box shadow button */
+.btn.btn-shadow {
+    color: #fff;
     background-color: #F26454;
+    border: none;
+    box-shadow: #C92E46 0px 10px 0px 0px;
+}
+
+.btn-shadow:hover {
+    box-shadow: #C92E46 0px 7px 0px 0px;
+}
+
+.btn-shadow:active {
+    box-shadow: #C92E46 0px 0px 0px 0px;
+    transform: translateY(5px);
+    -webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
 }
 
 /* icon button */
