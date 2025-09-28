@@ -2,6 +2,41 @@ body {
     padding: 0;
     margin: 0;
     font-family: "Ubuntu Mono", monospace;
+    background-color: #EFE9E1;
+}
+
+.link-code {
+    padding: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.link-code a {
+    position: relative;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+}
+
+.link-code a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background: #000;
+    transform: scaleX(0);
+    transform-origin: right;
+    -webkit-transition: transform 0.5s;
+	-moz-transition: transform 0.5s;
+	transition: transform 0.5s;
+}
+
+.link-code a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
 }
 
 .mb0 {
@@ -10,8 +45,7 @@ body {
 
 .container {
     width: 100%;
-    padding: 50px 0 150px;
-    background-color: #EFE9E1;
+    padding-bottom: 150px;
 }
 
 .container h1 {
@@ -19,6 +53,13 @@ body {
     color: #F26454;
     text-align: center;
     margin-bottom: 70px;
+}
+
+.container h2 {
+    font-size: 32px;
+    color: #F26454;
+    text-align: center;
+    margin-bottom: 50px;
 }
 
 .container .btn-gp {
@@ -190,11 +231,11 @@ body {
     color: #fff;
     background-color: #F26454;
     border: none;
-    box-shadow: #C92E46 0px 10px 0px 0px;
+    box-shadow: #C92E46 0px 8px 0px 0px;
 }
 
 .btn-shadow:hover {
-    box-shadow: #C92E46 0px 7px 0px 0px;
+    box-shadow: #C92E46 0px 6px 0px 0px;
 }
 
 .btn-shadow:active {
@@ -204,59 +245,3 @@ body {
 	-moz-transition: all 0.3s;
 	transition: all 0.3s;
 }
-
-/* icon button */
-/* .btn.btn-icon1 {
-    border-radius: 50%;
-    padding: 35px 35px;
-    background-color: #000;
-    border: none;
-}
-
-.btn-icon1 img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-}
-
-.btn.btn-icon1:hover {
-    background-color: #A79BF9;
-} */
-
-/*  */
-/* .fill-button {
-  margin-top: 100px;
-  padding: 15px 30px;
-  font-size: 18px;
-  border: 2px solid #3498db;
-  color: #3498db;
-  background-color: transparent;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: color 0.4s ease-in-out;
-}
-
-.fill-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #3498db;
-  z-index: -1; 
-  transform: translateX(-100%);
-  transition: transform 0.4s ease-in-out;
-}
-
-.fill-button:hover {
-  color: #ffffff;
-}
-
-.fill-button:hover::before {
-  transform: translateX(0);
-} */
