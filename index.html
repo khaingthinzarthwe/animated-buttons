@@ -40,9 +40,285 @@
 
         <!-- box shadow button -->
         <h2>Box Shadow Button</h2>
-        <div class="btn-gp mb0">
+        <div class="btn-gp">
             <button class="btn btn-shadow">Box Shadow</button>
+        </div>
+
+        <!-- new buttons -->
+        <h2>New Animated Buttons</h2>
+        <div class="btn-gp mb0">
+            <button class="toggle" role="switch" aria-checked="false" aria-label="Toggle">
+                <svg viewBox="0 0 160 66" aria-hidden="true">
+                    <rect class="track" x="0" y="0" width="160" height="66" rx="33" ry="33"/>
+                    <path class="knob" d=""/>
+                </svg>
+            </button>
         </div>
     </div>
 </body>
+<script>
+    (() => {
+        const button = document.querySelector('.toggle');
+        const knob = button.querySelector('.knob');
+
+        // Settings
+        const CENTER_Y = 33;
+        const RADIUS = 30;
+
+        const OFF_X = 33;
+        const ON_X = 127;
+
+        const PRESS_DISTANCE = 22;
+        const CURVE = 0.5523;
+
+        const reducedMotion = matchMedia(
+            '(prefers-reduced-motion: reduce)'
+        ).matches;
+
+        // Toggle state
+        let isOn = false;
+        let direction = 1;
+        // The head of the shape
+        const head = {
+            x: OFF_X,
+            velocity: 0,
+            target: OFF_X,
+            stiffness: 900,
+            damping: 48
+        };
+        // The tail of the shape
+        const tail = {
+            x: OFF_X,
+            velocity: 0,
+            target: OFF_X,
+            stiffness: 240,
+            damping: 13
+        };
+
+        // 0 = plain circle, 1 = fully stretched — used to soften the curve as it stretches
+        function getStretchAmount(backLength) {
+            const raw = (backLength - RADIUS) / RADIUS;
+            return Math.min(Math.max(raw, 0), 1);
+        }
+
+        const MIN_SQUISH_RATIO = 0.7; // how much the knob is allowed to shrink before we stop it
+        function getBackLength(stretch) {
+            if (stretch >= 0) {
+                return RADIUS + stretch;
+            }
+            return Math.max(RADIUS * MIN_SQUISH_RATIO, RADIUS + stretch * 0.6);
+        }
+
+        // The bezier control point that rounds off the back of the shape
+        function getBackCurveControl(headX, backLength, stretchAmount) {
+            const reach = backLength < RADIUS
+                ? CURVE * backLength
+                : CURVE * RADIUS + (backLength - RADIUS) * 0.55;
+
+            return {
+                x: headX - direction * reach,
+                y: CURVE * RADIUS * (1 - stretchAmount * 0.82)
+            };
+        }
+
+        // Create the SVG shape
+        function createShape(headX, tailX) {
+            const stretch = (headX - tailX) * direction;
+            const backLength = getBackLength(stretch);
+            const backX = headX - direction * backLength;
+            const stretchAmount = getStretchAmount(backLength); 
+            const control = getBackCurveControl(headX, backLength, stretchAmount);
+            const sweepDirection = direction > 0 ? 1 : 0;
+
+            return [
+                `M ${headX} ${CENTER_Y - RADIUS}`,
+
+                // Front half — normal semicircle
+                `A ${RADIUS} ${RADIUS} 0 0 ${sweepDirection} ${headX} ${CENTER_Y + RADIUS}`,
+
+                // Bottom → back
+                `C ${control.x} ${CENTER_Y + RADIUS} ${backX} ${CENTER_Y + control.y} ${backX} ${CENTER_Y}`,
+
+                // Back → top
+                `C ${backX} ${CENTER_Y - control.y} ${control.x} ${CENTER_Y - RADIUS} ${headX} ${CENTER_Y - RADIUS}`,
+
+                'Z'
+            ].join(' ');
+        }
+
+        // Draw the knob
+        function render() {
+            knob.setAttribute('d', createShape(head.x, tail.x));
+        }
+
+        // Spring animation
+        function updateSpring(object, deltaTime) {
+            const force =
+                -object.stiffness * (object.x - object.target)
+                -object.damping * object.velocity;
+
+            object.velocity += force * deltaTime;
+            object.x += object.velocity * deltaTime;
+        }
+
+
+        let animationFrame = 0;
+        let previousTime = 0;
+        function animate(currentTime) {
+            let deltaTime = Math.min(
+                (currentTime - previousTime) / 1000,
+                1 / 30
+            );
+
+            previousTime = currentTime;
+
+            // Run physics several times per frame
+            const steps = 4;
+            const stepTime = deltaTime / steps;
+
+            for (let i = 0; i < steps; i++) {
+                updateSpring(head, stepTime);
+                updateSpring(tail, stepTime);
+
+                // Keep the head inside the toggle
+                head.x = Math.max(
+                    OFF_X,
+                    Math.min(head.x, ON_X)
+                );
+
+                // Allow the tail to stretch slightly outside
+                tail.x = Math.max(
+                    OFF_X - 22,
+                    Math.min(tail.x, ON_X + 22)
+                );
+            }
+
+            render();
+
+
+            // Stop animation when everything has settled
+            const headFinished =
+                Math.abs(head.x - head.target) < 0.05 &&
+                Math.abs(head.velocity) < 0.05;
+
+            const tailFinished =
+                Math.abs(tail.x - tail.target) < 0.05 &&
+                Math.abs(tail.velocity) < 0.05;
+
+            if (headFinished && tailFinished) {
+                head.x = head.target;
+                tail.x = tail.target;
+
+                head.velocity = 0;
+                tail.velocity = 0;
+
+                render();
+
+                animationFrame = 0;
+                return;
+            }
+
+            animationFrame = requestAnimationFrame(animate);
+        }
+
+
+        function startAnimation() {
+            if (reducedMotion) {
+                head.x = head.target;
+                tail.x = tail.target;
+                render();
+                return;
+            }
+
+            if (!animationFrame) {
+                previousTime = performance.now();
+                animationFrame = requestAnimationFrame(animate);
+            }
+        }
+
+        // Get current position
+        function getCurrentPosition() {
+            return isOn ? ON_X : OFF_X;
+        }
+        // Press animation
+        function press() {
+            direction = isOn ? -1 : 1;
+
+            const currentPosition = getCurrentPosition();
+
+            // Move the front forward
+            head.target =
+                currentPosition +
+                direction * PRESS_DISTANCE;
+
+            // Keep the tail at the current position
+            tail.target = currentPosition;
+
+            startAnimation();
+        }
+
+        // Release animation
+        function release(shouldToggle) {
+            if (shouldToggle) {
+                isOn = !isOn;
+
+                button.setAttribute(
+                    'aria-checked',
+                    String(isOn)
+                );
+
+                button.dispatchEvent(
+                    new CustomEvent('change', {
+                        detail: {
+                            checked: isOn
+                        }
+                    })
+                );
+            }
+
+            const currentPosition = getCurrentPosition();
+
+            // Return both parts to their normal position
+            head.target = currentPosition;
+            tail.target = currentPosition;
+
+            startAnimation();
+        }
+
+        
+        // Mouse / Touch / Pointer
+        let isPressed = false;
+
+        button.addEventListener('pointerdown', (event) => {
+            if (event.button !== 0) return;
+
+            isPressed = true;
+
+            button.setPointerCapture(event.pointerId);
+
+            press();
+        });
+
+
+        button.addEventListener('pointerup', (event) => {
+            if (!isPressed) return;
+
+            isPressed = false;
+
+            const rect = button.getBoundingClientRect();
+
+            const isInside =
+                event.clientX >= rect.left &&
+                event.clientX <= rect.right &&
+                event.clientY >= rect.top &&
+                event.clientY <= rect.bottom;
+
+            release(isInside);
+        });
+
+        // Initial drawing
+        render();
+
+    })();
+</script>
 </html>

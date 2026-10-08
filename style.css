@@ -245,3 +245,32 @@ body {
 	-moz-transition: all 0.3s;
 	transition: all 0.3s;
 }
+
+/* toggle button */
+.toggle {
+    all: unset;
+    display: block;
+    width: 160px;
+    height: 66px;
+    border-radius: 50px;
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.toggle svg { 
+    display: block; 
+    width: 100%; 
+    height: 100%; 
+    overflow: visible; 
+}
+.track { 
+    fill: #BC7069; 
+    transition: fill 220ms ease; 
+}
+.knob  { 
+    fill: #fff; 
+    transition: fill 220ms ease; 
+}
+.toggle[aria-checked="true"] .track { fill: #8C70E9; }
+.toggle[aria-checked="true"] .knob  { fill: #fff; }
